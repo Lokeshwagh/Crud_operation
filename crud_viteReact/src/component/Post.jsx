@@ -1,8 +1,10 @@
 import { getMethod,deletePost } from "../api/PostApi";
 import { useEffect, useState } from "react";
 import { Form } from "./Form";
+import '../App.css';
 export const Post=()=>{
     const [data,setdata]=useState([]);
+    const [updateData,setupdateData]=useState({});
       const getPostData=async()=>{
         const res=await getMethod();
       console.log(res.data);
@@ -12,7 +14,7 @@ export const Post=()=>{
       useEffect(()=>{
         getPostData();
       },[]);
-
+// for delete the post
       const handleDeletePost=async(id)=>{
         try {
              const res=await deletePost(id);
@@ -26,15 +28,17 @@ export const Post=()=>{
         } catch (error) {
             console.log(err);
         }
-          
-                          
+       }
+      //  for update the post
+      const handleUpdatePost=(curEl)=>{
+                setupdateData(curEl);
       }
       return(
         <>
         <section>
-            <Form data={data} setdata={setdata}/>
+            <Form data={data} setdata={setdata} updateData={updateData} setupdateData={setupdateData}/>
         </section>
-            <ul>{
+            <ul className="ulList">{
                 data.map((curEl)=>{
                     const{id,body,title}=curEl;
                     return(
@@ -42,9 +46,8 @@ export const Post=()=>{
                         <p>id:{id}</p>
                        <p>Title:{title}</p>
                        <p>Body:{body}</p>
-                       <button>Edit</button>
-                       <button onClick={()=>handleDeletePost(id)}>Delete</button> 
-
+                       <button onClick={()=>handleUpdatePost(curEl)} class="button-75" role="button"><span class="text">Edit</span></button>
+                       <button onClick={()=>handleDeletePost(id)} class="button-75" role="button"><span class="text">Delete</span></button>
                     </li>
                     )
                 })
